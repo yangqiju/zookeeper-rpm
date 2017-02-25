@@ -65,9 +65,8 @@ install -D -p -m 644 %{S:2} %{buildroot}%{_sysconfdir}/zookeeper/
 
 
 %post
-#ls -sf %{buildroot}%{home}/bin/zkServer.sh %{buildroot}%{_sysconfdir}/init.d/zookeeper
 /sbin/chkconfig zookeeper on
-/sbin/service zookeeper start
+#/sbin/service zookeeper start
 
 
 %clean
