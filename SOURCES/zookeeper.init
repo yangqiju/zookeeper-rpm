@@ -17,30 +17,28 @@ export LOG_DIR=/var/log/zookeeper
 
 [ -e /etc/sysconfig/zookeeper ] && . /etc/sysconfig/zookeeper
 
-case "$1" in
-  start)
+start(){
     echo -n "starting zookeeper.."
     /sbin/runuser -s /bin/sh $ZOO_USER -c "ZOO_LOG_DIR=$LOG_DIR ZOOCFGDIR=$ZOO_CONFIG_DIR nohup $ZOO_HOME/bin/zkServer.sh start >> $LOG_DIR/server.out 2> $LOG_DIR/server.err &"
-    echo "done."
-    exit 0
-    ;;
+    echo "start done."
+    return 0
+}
 
-  stop)
+stop(){
     echo -n "stopping zookeeper:"
     /sbin/runuser -s /bin/sh $ZOO_USER -c "ps -ef|grep org.apache.zookeeper.server.quorum.QuorumPeerMain | grep -v grep | awk '{print \$2}' | xargs kill"
-    echo "done."
-    exit 0
-    ;;
+    echo "stop done."
+    return 0
+}
 
-
-  hardstop)
+hardstop(){
     echo -n "stopping zookeeper:"
     /sbin/runuser -s /bin/sh $ZOO_USER -c "ps -ef|grep org.apache.zookeeper.server.quorum.QuorumPeerMain | grep -v grep | awk '{print \$2}' | xargs kill -9"
-    echo "done."
-    exit 0
-    ;;
+    echo "hard stop done."
+    reutrn 0
+}
 
-  status)
+status(){
     c_pid=`ps -ef|grep org.apache.zookeeper.server.quorum.QuorumPeerMain |grep -v grep | awk '{print $2}'`    
     if [ "$c_pid" = "" ] ; then
       echo "stopped"
@@ -49,6 +47,23 @@ case "$1" in
       echo "running $c_pid"
       exit 0
     fi
+}
+
+case "$1" in
+  start)
+    start
+    ;;
+
+  stop)
+    stop
+    ;;
+
+  hardstop)
+    hardstop
+    ;;
+
+  status)
+    status
     ;;
 
   restart)
